@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- El maximum-scale=1.0 y user-scalable=no evitan que el iPhone haga zoom o rebote al arrastrar el dedo -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Feliz Cumpleaños María</title>
   <style>
     * {
@@ -13,17 +12,16 @@
     }
 
     body {
-      /* Alto fijo y bloqueo estricto del scroll */
-      height: 100vh;
+      height: 100dvh;
       width: 100vw;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: system-ui, -apple-system, sans-serif;
-      padding: 20px;
-      overflow: hidden; /* ESTO BLOQUEA LA NAVEGACIÓN PARA ABAJO */
+      padding: calc(15px + env(safe-area-inset-top)) 20px calc(15px + env(safe-area-inset-bottom)) 20px;
+      overflow: hidden; 
       background-color: #050005; 
-      position: fixed; /* Ayuda a evitar el rebote elástico en iOS */
+      position: fixed; 
     }
 
     #glitterCanvas {
@@ -36,7 +34,7 @@
       pointer-events: none; 
     }
 
-    /* Tarjeta con efecto Vidrio Esmerilado (Glassmorphism) */
+    /* Tarjeta */
     .card {
       position: relative; 
       background-color: rgba(10, 0, 5, 0.65);
@@ -44,16 +42,16 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 20, 147, 0.3);
       
-      max-width: 650px;
       width: 100%;
-      /* Asegura que la tarjeta nunca sea más alta que la pantalla */
-      max-height: 95vh; 
+      max-width: 500px; 
+      max-height: 88dvh; 
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       
-      padding: 4vh 40px; /* Padding adaptable a la altura */
+      /* Padding inferior un poco más grande (5vh) para alejar el texto de los stickers de abajo */
+      padding: 4vh 20px 5vh 20px; 
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 60px rgba(255, 20, 147, 0.3);
       text-align: center;
@@ -63,65 +61,60 @@
     /* Imagen protagonista del centro */
     .main-image {
       width: 100%;
-      max-width: 380px;
-      /* Se achica automáticamente si la pantalla del celular es muy bajita */
-      max-height: 45vh; 
+      max-width: 320px; 
+      max-height: 40dvh; 
       object-fit: contain; 
       border-radius: 12px;
-      margin-bottom: 3vh;
+      margin-bottom: 2.5vh;
       border: 4px solid #ffffff;
       background-color: #ffffff;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     }
 
-    /* Estilo base para las imágenes de las esquinas */
+    /* Stickers con diseño FLUIDO: se agrandan o achican solos según el ancho de la pantalla */
     .corner-img {
       position: absolute;
-      width: 130px; 
-      height: 130px;
+      /* En móviles chicos miden 65px, en pantallas grandes llegan hasta 110px */
+      width: clamp(65px, 18vw, 110px); 
+      height: clamp(65px, 18vw, 110px);
       object-fit: cover;
       border-radius: 12px;
       background-color: #fff; 
-      border: 4px solid #ffffff; 
+      border: 3px solid #ffffff; 
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       z-index: 2;
     }
 
-    .top-left { top: -30px; left: -30px; transform: rotate(-12deg); }
-    .top-right { top: -30px; right: -30px; transform: rotate(10deg); }
-    .bottom-left { bottom: -30px; left: -30px; transform: rotate(8deg); }
-    .bottom-right { bottom: -30px; right: -30px; transform: rotate(-10deg); }
+    /* Posicionamiento dinámico para que no se escapen de la pantalla */
+    .top-left { top: clamp(-10px, -2vw, -20px); left: clamp(-10px, -2vw, -20px); transform: rotate(-12deg); }
+    .top-right { top: clamp(-10px, -2vw, -20px); right: clamp(-10px, -2vw, -20px); transform: rotate(10deg); }
+    .bottom-left { bottom: clamp(-10px, -2vw, -20px); left: clamp(-10px, -2vw, -20px); transform: rotate(8deg); }
+    .bottom-right { bottom: clamp(-10px, -2vw, -20px); right: clamp(-10px, -2vw, -20px); transform: rotate(-10deg); }
 
-    /* Textos adaptados para fondo oscuro */
+    /* Textos con tamaño dinámico y protección contra cortes */
     .quote {
-      font-size: 1.35rem;
+      /* Tamaño de fuente que fluye desde 0.9rem hasta 1.2rem */
+      font-size: clamp(0.9rem, 4vw, 1.2rem); 
       color: #e0e0e0; 
-      margin-bottom: 2vh;
+      margin-bottom: 1.5vh;
       font-style: italic;
+      line-height: 1.4;
+      padding: 0 10px; /* Margen de seguridad lateral */
     }
 
     .title {
-      font-size: 2.2rem;
+      /* Tamaño de fuente que fluye desde 1.35rem hasta 2rem */
+      font-size: clamp(1.35rem, 6.5vw, 2rem); 
       color: #ffffff; 
       font-weight: 900;
       letter-spacing: -0.5px;
+      line-height: 1.2;
       text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.5);
-    }
-
-    @media (max-width: 600px) {
-      body { padding: 15px; }
-      .card { padding: 4vh 20px; }
-      
-      /* Ajuste de textos para que no se corten en iPhone */
-      .title { font-size: 1.8rem; } 
-      .quote { font-size: 1.15rem; }
-      
-      /* Stickers reducidos y acercados en móviles */
-      .corner-img { width: 80px; height: 80px; border-width: 3px; } 
-      .top-left { top: -10px; left: -10px; }
-      .top-right { top: -10px; right: -10px; }
-      .bottom-left { bottom: -10px; left: -10px; }
-      .bottom-right { bottom: -10px; right: -10px; }
+      /* Estas dos reglas OBLIGAN al texto a bajar de renglón si es muy ancho, evitando que se corte en los bordes */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      width: 100%;
+      padding: 0 15px; /* Evita que choque directamente contra los stickers */
     }
   </style>
 </head>
@@ -137,16 +130,19 @@
     
     <img src="taladro.jpg" alt="Muela taladrando" class="main-image">
 
-    <p class="quote">"Porque para entenderlas, hace falta ser una de ellas."</p>
-    <h1 class="title">Feliz cumpleaños, Maríaa</h1>
+    <p class="quote">Porque para entenderlas, hace falta ser una de ellas</p>
+    <h1 class="title">Feliz cumpleaños Maríaa</h1>
   </main>
 
   <script>
     const canvas = document.getElementById('glitterCanvas');
     const ctx = canvas.getContext('2d');
     
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
 
     const particlesArray = [];
     const colors = ['#FF00FF', '#FF1493', '#FF69B4', '#E6A8D7', '#FFFFFF'];
@@ -155,7 +151,7 @@
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 0.5; 
+        this.size = Math.random() * 2.5 + 0.5; 
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.alpha = Math.random(); 
         this.alphaChange = (Math.random() * 0.05 + 0.02) * (Math.random() < 0.5 ? 1 : -1);
@@ -187,7 +183,7 @@
 
     function init() {
       particlesArray.length = 0;
-      const numParticles = (canvas.width * canvas.height) / 1000; 
+      const numParticles = (canvas.width * canvas.height) / 1200; 
       for (let i = 0; i < numParticles; i++) {
         particlesArray.push(new Particle());
       }
@@ -205,8 +201,7 @@
     animate();
 
     window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      resizeCanvas();
       init();
     });
   </script>
