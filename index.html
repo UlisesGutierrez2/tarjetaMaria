@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- El maximum-scale=1.0 y user-scalable=no evitan que el iPhone haga zoom o rebote al arrastrar el dedo -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feliz Cumpleaños Muelón</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Feliz Cumpleaños María</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,14 +13,17 @@
     }
 
     body {
-      min-height: 100vh;
+      /* Alto fijo y bloqueo estricto del scroll */
+      height: 100vh;
+      width: 100vw;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: system-ui, -apple-system, sans-serif;
-      padding: 40px;
-      overflow-x: hidden;
+      padding: 20px;
+      overflow: hidden; /* ESTO BLOQUEA LA NAVEGACIÓN PARA ABAJO */
       background-color: #050005; 
+      position: fixed; /* Ayuda a evitar el rebote elástico en iOS */
     }
 
     #glitterCanvas {
@@ -35,17 +39,21 @@
     /* Tarjeta con efecto Vidrio Esmerilado (Glassmorphism) */
     .card {
       position: relative; 
-      /* Fondo oscuro semitransparente */
       background-color: rgba(10, 0, 5, 0.65);
-      /* Desenfoque del fondo (blur) para que el glitter de atrás se vea difuminado */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      /* Borde sutil rosado para enmarcar el vidrio */
       border: 1px solid rgba(255, 20, 147, 0.3);
       
       max-width: 650px;
       width: 100%;
-      padding: 50px 40px;
+      /* Asegura que la tarjeta nunca sea más alta que la pantalla */
+      max-height: 95vh; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      
+      padding: 4vh 40px; /* Padding adaptable a la altura */
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 60px rgba(255, 20, 147, 0.3);
       text-align: center;
@@ -56,10 +64,11 @@
     .main-image {
       width: 100%;
       max-width: 380px;
-      height: auto;
+      /* Se achica automáticamente si la pantalla del celular es muy bajita */
+      max-height: 45vh; 
+      object-fit: contain; 
       border-radius: 12px;
-      margin-bottom: 25px;
-      /* Se agrega borde blanco para que contraste contra la tarjeta oscura */
+      margin-bottom: 3vh;
       border: 4px solid #ffffff;
       background-color: #ffffff;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
@@ -86,27 +95,33 @@
     /* Textos adaptados para fondo oscuro */
     .quote {
       font-size: 1.35rem;
-      color: #e0e0e0; /* Gris claro en lugar de gris oscuro */
-      margin-bottom: 12px;
+      color: #e0e0e0; 
+      margin-bottom: 2vh;
       font-style: italic;
     }
 
     .title {
       font-size: 2.2rem;
-      color: #ffffff; /* Letras blancas */
+      color: #ffffff; 
       font-weight: 900;
       letter-spacing: -0.5px;
-      /* Efecto de resplandor neón en el texto */
       text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.5);
     }
 
     @media (max-width: 600px) {
-      .card { padding: 40px 20px; margin: 20px 0; }
-      .corner-img { width: 90px; height: 90px; }
-      .top-left { top: -15px; left: -15px; }
-      .top-right { top: -15px; right: -15px; }
-      .bottom-left { bottom: -15px; left: -15px; }
-      .bottom-right { bottom: -15px; right: -15px; }
+      body { padding: 15px; }
+      .card { padding: 4vh 20px; }
+      
+      /* Ajuste de textos para que no se corten en iPhone */
+      .title { font-size: 1.8rem; } 
+      .quote { font-size: 1.15rem; }
+      
+      /* Stickers reducidos y acercados en móviles */
+      .corner-img { width: 80px; height: 80px; border-width: 3px; } 
+      .top-left { top: -10px; left: -10px; }
+      .top-right { top: -10px; right: -10px; }
+      .bottom-left { bottom: -10px; left: -10px; }
+      .bottom-right { bottom: -10px; right: -10px; }
     }
   </style>
 </head>
@@ -116,9 +131,10 @@
 
   <main class="card">
     <img src="migraña.jpg" alt="Migraña" class="corner-img top-left">
-    <img src="puntacana.jpg" alt="Muela enojada" class="corner-img top-right" style="object-fit: contain; padding: 2px; background-color: #ffffff;;"">
+    <img src="puntacana.jpg" alt="Punta Cana" class="corner-img top-right" style="object-fit: contain; padding: 2px; background-color: #ffffff;">
     <img src="desakta2.jpg" alt="Extra 1" class="corner-img bottom-left" style="object-fit: contain; padding: 8px; background-color: #ffffff;">
     <img src="stanley.webp" alt="Extra 2" class="corner-img bottom-right" style="object-fit: contain; padding: 12px; background-color: #ffffff;">
+    
     <img src="taladro.jpg" alt="Muela taladrando" class="main-image">
 
     <p class="quote">"Porque para entenderlas, hace falta ser una de ellas."</p>
