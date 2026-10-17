@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Cumpleaños Muelón</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 40px;
+      overflow-x: hidden;
+      background-color: #050005; 
+    }
+
+    #glitterCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; 
+      pointer-events: none; 
+    }
+
+    /* Tarjeta con efecto Vidrio Esmerilado (Glassmorphism) */
+    .card {
+      position: relative; 
+      /* Fondo oscuro semitransparente */
+      background-color: rgba(10, 0, 5, 0.65);
+      /* Desenfoque del fondo (blur) para que el glitter de atrás se vea difuminado */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      /* Borde sutil rosado para enmarcar el vidrio */
+      border: 1px solid rgba(255, 20, 147, 0.3);
+      
+      max-width: 650px;
+      width: 100%;
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 60px rgba(255, 20, 147, 0.3);
+      text-align: center;
+      z-index: 1;
+    }
+
+    /* Imagen protagonista del centro */
+    .main-image {
+      width: 100%;
+      max-width: 380px;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      /* Se agrega borde blanco para que contraste contra la tarjeta oscura */
+      border: 4px solid #ffffff;
+      background-color: #ffffff;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Estilo base para las imágenes de las esquinas */
+    .corner-img {
+      position: absolute;
+      width: 130px; 
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+      background-color: #fff; 
+      border: 4px solid #ffffff; 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      z-index: 2;
+    }
+
+    .top-left { top: -30px; left: -30px; transform: rotate(-12deg); }
+    .top-right { top: -30px; right: -30px; transform: rotate(10deg); }
+    .bottom-left { bottom: -30px; left: -30px; transform: rotate(8deg); }
+    .bottom-right { bottom: -30px; right: -30px; transform: rotate(-10deg); }
+
+    /* Textos adaptados para fondo oscuro */
+    .quote {
+      font-size: 1.35rem;
+      color: #e0e0e0; /* Gris claro en lugar de gris oscuro */
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .title {
+      font-size: 2.2rem;
+      color: #ffffff; /* Letras blancas */
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      /* Efecto de resplandor neón en el texto */
+      text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 40px 20px; margin: 20px 0; }
+      .corner-img { width: 90px; height: 90px; }
+      .top-left { top: -15px; left: -15px; }
+      .top-right { top: -15px; right: -15px; }
+      .bottom-left { bottom: -15px; left: -15px; }
+      .bottom-right { bottom: -15px; right: -15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="glitterCanvas"></canvas>
+
+  <main class="card">
+    <img src="migraña.jpg" alt="Migraña" class="corner-img top-left">
+    <img src="puntacana.jpg" alt="Muela enojada" class="corner-img top-right" style="object-fit: contain; padding: 2px; background-color: #ffffff;;"">
+    <img src="desakta2.jpg" alt="Extra 1" class="corner-img bottom-left" style="object-fit: contain; padding: 8px; background-color: #ffffff;">
+    <img src="stanley.webp" alt="Extra 2" class="corner-img bottom-right" style="object-fit: contain; padding: 12px; background-color: #ffffff;">
+    <img src="taladro.jpg" alt="Muela taladrando" class="main-image">
+
+    <p class="quote">"Porque para entenderlas, hace falta ser una de ellas."</p>
+    <h1 class="title">Feliz cumpleaños, Maríaa</h1>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('glitterCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particlesArray = [];
+    const colors = ['#FF00FF', '#FF1493', '#FF69B4', '#E6A8D7', '#FFFFFF'];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 0.5; 
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.alpha = Math.random(); 
+        this.alphaChange = (Math.random() * 0.05 + 0.02) * (Math.random() < 0.5 ? 1 : -1);
+      }
+
+      draw() {
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        if(this.size > 1.2) {
+            ctx.shadowBlur = this.size * 4;
+            ctx.shadowColor = this.color;
+        } else {
+            ctx.shadowBlur = 0;
+        }
+      }
+
+      update() {
+        this.alpha += this.alphaChange;
+        if (this.alpha <= 0.05 || this.alpha >= 1) {
+          this.alphaChange *= -1; 
+        }
+        this.draw();
+      }
+    }
+
+    function init() {
+      particlesArray.length = 0;
+      const numParticles = (canvas.width * canvas.height) / 1000; 
+      for (let i = 0; i < numParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+  </script>
+</body>
+</html>
