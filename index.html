@@ -13,7 +13,7 @@
 
     body {
       height: 100dvh;
-      width: 100vw;
+      width: 100%; /* Evita desbordamientos en pantallas angostas o exportaciones a PDF */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -50,7 +50,6 @@
       justify-content: center;
       align-items: center;
       
-      /* Padding inferior un poco más grande (5vh) para alejar el texto de los stickers de abajo */
       padding: 4vh 20px 5vh 20px; 
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 60px rgba(255, 20, 147, 0.3);
@@ -71,10 +70,9 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     }
 
-    /* Stickers con diseño FLUIDO: se agrandan o achican solos según el ancho de la pantalla */
+    /* Stickers con diseño FLUIDO */
     .corner-img {
       position: absolute;
-      /* En móviles chicos miden 65px, en pantallas grandes llegan hasta 110px */
       width: clamp(65px, 18vw, 110px); 
       height: clamp(65px, 18vw, 110px);
       object-fit: cover;
@@ -85,36 +83,36 @@
       z-index: 2;
     }
 
-    /* Posicionamiento dinámico para que no se escapen de la pantalla */
     .top-left { top: clamp(-10px, -2vw, -20px); left: clamp(-10px, -2vw, -20px); transform: rotate(-12deg); }
     .top-right { top: clamp(-10px, -2vw, -20px); right: clamp(-10px, -2vw, -20px); transform: rotate(10deg); }
     .bottom-left { bottom: clamp(-10px, -2vw, -20px); left: clamp(-10px, -2vw, -20px); transform: rotate(8deg); }
     .bottom-right { bottom: clamp(-10px, -2vw, -20px); right: clamp(-10px, -2vw, -20px); transform: rotate(-10deg); }
 
-    /* Textos con tamaño dinámico y protección contra cortes */
+    /* Textos protegidos contra cortes y por encima de los stickers */
     .quote {
-      /* Tamaño de fuente que fluye desde 0.9rem hasta 1.2rem */
-      font-size: clamp(0.9rem, 4vw, 1.2rem); 
+      font-size: clamp(0.85rem, 3.5vw, 1.1rem); 
       color: #e0e0e0; 
       margin-bottom: 1.5vh;
       font-style: italic;
       line-height: 1.4;
-      padding: 0 10px; /* Margen de seguridad lateral */
+      padding: 0 20px; 
+      position: relative;
+      z-index: 3;
     }
 
     .title {
-      /* Tamaño de fuente que fluye desde 1.35rem hasta 2rem */
-      font-size: clamp(1.35rem, 6.5vw, 2rem); 
+      font-size: clamp(1.2rem, 5.5vw, 1.8rem); 
       color: #ffffff; 
       font-weight: 900;
       letter-spacing: -0.5px;
       line-height: 1.2;
       text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.5);
-      /* Estas dos reglas OBLIGAN al texto a bajar de renglón si es muy ancho, evitando que se corte en los bordes */
       overflow-wrap: break-word;
       word-wrap: break-word;
       width: 100%;
-      padding: 0 15px; /* Evita que choque directamente contra los stickers */
+      padding: 0 50px; /* Margen amplio para esquivar los stickers de las esquinas */
+      position: relative;
+      z-index: 3;
     }
   </style>
 </head>
@@ -130,8 +128,8 @@
     
     <img src="taladro.jpg" alt="Muela taladrando" class="main-image">
 
-    <p class="quote">Porque para entenderlas, hace falta ser una de ellas</p>
-    <h1 class="title">Feliz cumpleaños Maríaa</h1>
+    <p class="quote">"Porque para entenderlas, hace falta ser una de ellas."</p>
+    <h1 class="title">Feliz cumpleaños, Maríaa</h1>
   </main>
 
   <script>
